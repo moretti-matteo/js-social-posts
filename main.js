@@ -56,22 +56,59 @@ const posts = [
     }
 ];
 
+// Milestone 1 - Prendendo come riferimento il layout di esempio presente nell'html, stampiamo i post del nostro feed.
+// Milestone 2 - Se clicchiamo sul tasto "Mi Piace" cambiamo il colore al testo del bottone e incrementiamo il counter dei likes relativo.
+// Salviamo in un secondo array gli id dei post ai quali abbiamo messo il like.
+
 const container = document.querySelector("#container");
+const postLiked = [];
+
 for (let i = 0; i < posts.length; i++) {
     const post = document.querySelector("#post").content.cloneNode(true);
+
+    post.querySelector(".post-meta__time").innerHTML = new Date(posts[i].created).toLocaleDateString();
 
     post.querySelector(".post__text").innerHTML = posts[i].content;
     post.querySelector(".post-meta__icon img").src = posts[i].author.image;
     post.querySelector(".post-meta__icon img").alt = posts[i].author.name;
     post.querySelector(".post-meta__author").innerHTML = posts[i].author.name;
-    post.querySelector(".post-meta__time").innerHTML = posts[i].created;
     post.querySelector(".post__image img").src = posts[i].media;
     post.querySelector(".js-likes-counter").innerHTML = posts[i].likes;
+    post.querySelector(".js-like-button").setAttribute("data-postid", posts[i].id);
+
+
     container.append(post);
-    // content.innerHTML = posts[i].content;
-    // profileImg.src = posts[i].author.image;
-    // nameAuthor.innerHTML = posts[i].author.name;
-    // created.innerHTML = posts[i].created;
-    // postImg.src = posts[i].media;
-    // likes.innerHTML = posts[i].likes;
+
+
 }
+
+let footer = document.querySelectorAll(".post__footer");
+for (let i = 0; i < footer.length; i++) {
+
+    const likeBtn = footer[i].querySelector(".js-like-button");
+    let likesCount = footer[i].querySelector(".js-likes-counter");
+
+    likeBtn.addEventListener("click", function () {
+        likeBtn.classList.toggle("like-button--liked");
+
+        if (likeBtn.classList.contains("like-button--liked")) {
+            //likeBtn.classList.add("like-button--liked");
+            postLiked.push(likeBtn.getAttribute("data-postid"));
+            //  let likesCount = Number(footer[i].querySelector(".js-likes-counter").innerHTML);
+            likesCount.innerHTML = Number(likesCount.innerHTML) + 1;
+            console.log(postLiked);
+        } else {
+            postLiked.splice(postLiked.indexOf(likeBtn.getAttribute("data-postid")), 1);
+            // let likesCount = Number(footer[i].querySelector(".js-likes-counter").innerHTML);
+            likesCount.innerHTML = Number(likesCount.innerHTML) - 1;
+            console.log(postLiked);
+
+        }
+
+
+
+    });
+
+}
+
+
